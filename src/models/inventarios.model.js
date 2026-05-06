@@ -1,27 +1,37 @@
-// src/models/inventario.model.js
 const db = require("../config/db");
 
 const Inventario = {
-  // Obtener todos los movimientos
+  // Mejor formato
   getAll: async () => {
-    const [rows] = await db.query("SELECT * FROM inventario");
+    const [rows] = await db.query(`
+      SELECT 
+        id_inventario AS id,
+        producto_id,
+        tipo,
+        cantidad
+      FROM inventario
+    `);
     return rows;
   },
 
-  // Obtener movimiento por ID (opcional pero útil)
   getById: async (id) => {
     const [rows] = await db.query(
-      "SELECT * FROM inventario WHERE id_inventario = ?",
+      `SELECT 
+         id_inventario AS id,
+         producto_id,
+         tipo,
+         cantidad
+       FROM inventario 
+       WHERE id_inventario = ?`,
       [id]
     );
     return rows[0];
   },
 
-  // Crear movimiento de inventario
   create: async ({ producto_id, tipo, cantidad }) => {
     const [result] = await db.query(
       `INSERT INTO inventario (producto_id, tipo, cantidad)
-       VALUES (?, ?, ?)`,
+       VALUES (?, ?, ?)` ,
       [producto_id, tipo, cantidad]
     );
 
@@ -33,7 +43,6 @@ const Inventario = {
     };
   },
 
-  // Actualizar movimiento (opcional)
   update: async (id, { producto_id, tipo, cantidad }) => {
     await db.query(
       `UPDATE inventario
@@ -50,7 +59,6 @@ const Inventario = {
     };
   },
 
-  // Eliminar movimiento (opcional)
   delete: async (id) => {
     await db.query(
       "DELETE FROM inventario WHERE id_inventario = ?",

@@ -1,28 +1,39 @@
-// src/models/productos.model.js
 const db = require("../config/db");
 
 const Producto = {
-  // Obtener todos los productos
+  // Público
   getAll: async () => {
-    const [rows] = await db.query("SELECT * FROM productos");
+    const [rows] = await db.query(`
+      SELECT 
+        id_producto AS id,
+        nombre_producto AS nombre,
+        precio,
+        categoria_id
+      FROM productos
+    `);
     return rows;
   },
 
-  // Obtener producto por ID
   getById: async (id) => {
     const [rows] = await db.query(
-      "SELECT * FROM productos WHERE id_producto = ?",
-      [id],
+      `SELECT 
+         id_producto AS id,
+         nombre_producto AS nombre,
+         precio,
+         categoria_id
+       FROM productos 
+       WHERE id_producto = ?`,
+      [id]
     );
     return rows[0];
   },
 
-  // Crear producto
+  // Privado
   create: async ({ nombre, precio, categoria_id }) => {
     const [result] = await db.query(
       `INSERT INTO productos (nombre_producto, precio, categoria_id)
-       VALUES (?, ?, ?)`,
-      [nombre, precio, categoria_id],
+       VALUES (?, ?, ?)` ,
+      [nombre, precio, categoria_id]
     );
 
     return {
@@ -33,13 +44,12 @@ const Producto = {
     };
   },
 
-  // Actualizar producto
   update: async (id, { nombre, precio, categoria_id }) => {
     await db.query(
       `UPDATE productos
        SET nombre_producto = ?, precio = ?, categoria_id = ?
        WHERE id_producto = ?`,
-      [nombre, precio, categoria_id, id],
+      [nombre, precio, categoria_id, id]
     );
 
     return {
@@ -50,9 +60,11 @@ const Producto = {
     };
   },
 
-  // Eliminar producto
   delete: async (id) => {
-    await db.query("DELETE FROM productos WHERE id_producto = ?", [id]);
+    await db.query(
+      "DELETE FROM productos WHERE id_producto = ?",
+      [id]
+    );
   },
 };
 

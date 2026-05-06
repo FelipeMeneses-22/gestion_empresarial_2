@@ -1,27 +1,37 @@
-// src/models/pedidos.model.js
 const db = require("../config/db");
 
 const Pedido = {
-  // Obtener todos los pedidos
-  getAll: async () => {
-    const [rows] = await db.query("SELECT * FROM pedidos");
+  // SOLO pedidos del usuario
+  getByUser: async (usuarioId) => {
+    const [rows] = await db.query(`
+      SELECT 
+        id_pedido AS id,
+        usuario_id,
+        total
+      FROM pedidos
+      WHERE usuario_id = ?
+    `, [usuarioId]);
+
     return rows;
   },
 
-  // Obtener pedido por ID (opcional)
   getById: async (id) => {
     const [rows] = await db.query(
-      "SELECT * FROM pedidos WHERE id_pedido = ?",
+      `SELECT 
+         id_pedido AS id,
+         usuario_id,
+         total
+       FROM pedidos 
+       WHERE id_pedido = ?`,
       [id]
     );
     return rows[0];
   },
 
-  // Crear pedido
   create: async ({ usuario_id, total }) => {
     const [result] = await db.query(
       `INSERT INTO pedidos (usuario_id, total)
-       VALUES (?, ?)`,
+       VALUES (?, ?)` ,
       [usuario_id, total]
     );
 
@@ -32,7 +42,6 @@ const Pedido = {
     };
   },
 
-  // Actualizar pedido (opcional)
   update: async (id, { usuario_id, total }) => {
     await db.query(
       `UPDATE pedidos
@@ -48,7 +57,6 @@ const Pedido = {
     };
   },
 
-  // Eliminar pedido (opcional)
   delete: async (id) => {
     await db.query(
       "DELETE FROM pedidos WHERE id_pedido = ?",

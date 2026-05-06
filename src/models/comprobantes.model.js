@@ -1,18 +1,26 @@
-// src/models/comprobante.model.js
 const db = require("../config/db");
 
 const Comprobante = {
-  // Obtener todos los comprobantes
+  // Obtener todos (solo interno)
   getAll: async () => {
-    const [rows] = await db.query("SELECT * FROM comprobantes");
+    const [rows] = await db.query(`
+      SELECT 
+        id_comprobante AS id,
+        pedido_id
+      FROM comprobantes
+    `);
     return rows;
   },
 
-  // Obtener comprobante por ID (opcional)
+  // Obtener por ID (opcional)
   getById: async (id) => {
     const [rows] = await db.query(
-      "SELECT * FROM comprobantes WHERE id_comprobante = ?",
-      [id],
+      `SELECT 
+         id_comprobante AS id,
+         pedido_id
+       FROM comprobantes 
+       WHERE id_comprobante = ?`,
+      [id]
     );
     return rows[0];
   },
@@ -22,7 +30,7 @@ const Comprobante = {
     const [result] = await db.query(
       `INSERT INTO comprobantes (pedido_id)
        VALUES (?)`,
-      [pedido_id],
+      [pedido_id]
     );
 
     return {
@@ -31,9 +39,12 @@ const Comprobante = {
     };
   },
 
-  // Eliminar comprobante (opcional)
+  // Eliminar (opcional)
   delete: async (id) => {
-    await db.query("DELETE FROM comprobantes WHERE id_comprobante = ?", [id]);
+    await db.query(
+      "DELETE FROM comprobantes WHERE id_comprobante = ?",
+      [id]
+    );
   },
 };
 

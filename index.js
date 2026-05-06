@@ -1,4 +1,6 @@
-const app = require('./src/app'); // o './app' según tu estructura
+require('dotenv').config(); // asegurar variables de entorno
+
+const app = require('./src/app'); 
 
 const PORT = process.env.PORT || 3000;
 

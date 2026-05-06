@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+require('dotenv').config(); // IMPORTANTE* (JWT y variables)
 
 // Middleware para leer JSON
 app.use(express.json());
@@ -9,32 +10,25 @@ app.use(express.json());
 // ==========================
 
 // Categorías
-const categoriasRouter = require('./routes/categorias.routes');
-app.use('/api/categorias', categoriasRouter);
+app.use('/api/categorias', require('./routes/categorias.routes'));
 
 // Productos
-const productosRouter = require('./routes/productos.routes');
-app.use('/api/productos', productosRouter);
+app.use('/api/productos', require('./routes/productos.routes'));
 
 // Usuarios
-const usuariosRouter = require('./routes/usuarios.routes');
-app.use('/api/usuarios', usuariosRouter);
+app.use('/api/usuarios', require('./routes/usuarios.routes'));
 
 // Pedidos
-const pedidosRouter = require('./routes/pedidos.routes');
-app.use('/api/pedidos', pedidosRouter);
+app.use('/api/pedidos', require('./routes/pedidos.routes'));
 
-// Detalles de pedidos
-const detallesRouter = require('./routes/detalles.routes');
-app.use('/api/detalle', detallesRouter);
+// Detalles
+app.use('/api/detalles', require('./routes/detalles.routes')); // plural
 
 // Comprobantes
-const comprobantesRouter = require('./routes/comprobantes.routes');
-app.use('/api/comprobante', comprobantesRouter);
+app.use('/api/comprobantes', require('./routes/comprobantes.routes')); // plural
 
 // Inventario
-const inventarioRouter = require('./routes/inventarios.routes');
-app.use('/api/inventario', inventarioRouter);
+app.use('/api/inventario', require('./routes/inventarios.routes'));
 
 // ==========================
 // EXPORTAR APP

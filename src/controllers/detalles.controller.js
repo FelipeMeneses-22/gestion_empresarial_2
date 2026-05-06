@@ -19,7 +19,13 @@ exports.createDetalle = async (req, res) => {
       });
     }
 
-    const result = await Detalle.create(req.body);
+    // Seguridad: no usar req.body completo (privado)
+    const result = await Detalle.create({
+      pedido_id,
+      producto_id,
+      cantidad
+    });
+
     res.status(201).json(result);
 
   } catch (error) {

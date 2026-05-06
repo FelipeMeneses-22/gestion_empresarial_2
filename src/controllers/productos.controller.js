@@ -12,11 +12,15 @@ exports.getProductos = async (req, res) => {
 exports.getProducto = async (req, res) => {
   try {
     const { id } = req.params;
+
     const data = await Producto.getById(id);
 
-    if (!data) return res.status(404).json({ message: "Producto no encontrado" });
+    if (!data) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
 
     res.json(data);
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -26,13 +30,26 @@ exports.createProducto = async (req, res) => {
   try {
     const { nombre, precio, categoria_id } = req.body;
 
+    //  Validaciones
     if (!nombre || !precio || !categoria_id) {
       return res.status(400).json({
         message: "Nombre, precio y categoría son obligatorios"
       });
     }
 
-    const result = await Producto.create(req.body);
+    if (precio <= 0) {
+      return res.status(400).json({
+        message: "El precio debe ser mayor a 0"
+      });
+    }
+
+    //  Seguridad: no usar req.body completo
+    const result = await Producto.create({
+      nombre,
+      precio,
+      categoria_id
+    });
+
     res.status(201).json(result);
 
   } catch (error) {
@@ -49,8 +66,20 @@ exports.createProducto = async (req, res) => {
 exports.updateProducto = async (req, res) => {
   try {
     const { id } = req.params;
+    const { nombre, precio, categoria_id } = req.body;
 
-    const result = await Producto.update(id, req.body);
+    if (!nombre || !precio || !categoria_id) {
+      return res.status(400).json({
+        message: "Todos los campos son obligatorios"
+      });
+    }
+
+    const result = await Producto.update(id, {
+      nombre,
+      precio,
+      categoria_id
+    });
+
     res.json(result);
 
   } catch (error) {
@@ -63,6 +92,7 @@ exports.deleteProducto = async (req, res) => {
     const { id } = req.params;
 
     await Producto.delete(id);
+
     res.json({ message: "Producto eliminado" });
 
   } catch (error) {

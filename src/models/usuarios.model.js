@@ -1,54 +1,69 @@
-// src/models/usuarios.model.js
 const db = require("../config/db");
 
 const Usuario = {
-  // Obtener todos los usuarios
+  // NO traer password
   getAll: async () => {
-    const [rows] = await db.query("SELECT * FROM usuarios");
+    const [rows] = await db.query(`
+      SELECT 
+        id_usuario AS id,
+        nombre,
+        correo
+      FROM usuarios
+    `);
     return rows;
   },
 
-  // Obtener usuario por ID (opcional)
   getById: async (id) => {
     const [rows] = await db.query(
-      "SELECT * FROM usuarios WHERE id_usuario = ?",
+      `SELECT 
+         id_usuario AS id,
+         nombre,
+         correo
+       FROM usuarios 
+       WHERE id_usuario = ?`,
       [id]
     );
     return rows[0];
   },
 
-  // Crear usuario
-  create: async ({ nombre, email, password }) => {
+  // Para login (sí trae password)
+  findByEmail: async (correo) => {
+    const [rows] = await db.query(
+      "SELECT * FROM usuarios WHERE correo = ?",
+      [correo]
+    );
+    return rows[0];
+  },
+
+  create: async ({ nombre, correo, contrasena }) => {
     const [result] = await db.query(
-      `INSERT INTO usuarios (nombre, email, password)
-       VALUES (?, ?, ?)`,
-      [nombre, email, password]
+      `INSERT INTO usuarios (nombre, correo, contrasena)
+       VALUES (?, ?, ?)` ,
+      [nombre, correo, contrasena]
     );
 
     return {
       id: result.insertId,
       nombre,
-      email,
+      correo,
     };
   },
 
-  // Actualizar usuario (opcional)
-  update: async (id, { nombre, email, password }) => {
+  update: async (id, { nombre, correo , contrasena }) => {
     await db.query(
       `UPDATE usuarios
-       SET nombre = ?, email = ?, password = ?
+       SET nombre = ?, correo = ?, contrasena = ?
        WHERE id_usuario = ?`,
-      [nombre, email, password, id]
+      [nombre, correo, contrasena, id]
     );
 
     return {
       id,
       nombre,
-      email,
+      correo,
     };
   },
 
-  // Eliminar usuario (opcional)
   delete: async (id) => {
     await db.query(
       "DELETE FROM usuarios WHERE id_usuario = ?",

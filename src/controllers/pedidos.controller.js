@@ -2,7 +2,10 @@ const Pedido = require('../models/pedidos.model');
 
 exports.getPedidos = async (req, res) => {
   try {
-    const data = await Pedido.getAll();
+    const usuarioId = req.usuario.id; // viene del token
+
+    const data = await Pedido.getByUser(usuarioId);
+
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -11,15 +14,20 @@ exports.getPedidos = async (req, res) => {
 
 exports.createPedido = async (req, res) => {
   try {
-    const { usuario_id, total } = req.body;
+    const usuario_id = req.usuario.id; // del token
+    const { total } = req.body;
 
-    if (!usuario_id || !total) {
+    if (!total) {
       return res.status(400).json({
-        message: "usuario_id y total son obligatorios"
+        message: "El total es obligatorio"
       });
     }
 
-    const result = await Pedido.create(req.body);
+    const result = await Pedido.create({
+      usuario_id,
+      total
+    });
+
     res.status(201).json(result);
 
   } catch (error) {

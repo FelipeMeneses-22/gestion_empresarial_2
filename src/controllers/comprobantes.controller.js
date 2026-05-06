@@ -19,7 +19,9 @@ exports.createComprobante = async (req, res) => {
       });
     }
 
-    const result = await Comprobante.create(req.body);
+    // Evitar enviar todo el body (privado - más seguro)
+    const result = await Comprobante.create({ pedido_id });
+
     res.status(201).json(result);
 
   } catch (error) {

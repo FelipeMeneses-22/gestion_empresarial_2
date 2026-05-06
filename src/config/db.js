@@ -1,3 +1,5 @@
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_NAME:", process.env.DB_NAME);
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
