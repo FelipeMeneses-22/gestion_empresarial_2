@@ -15,12 +15,12 @@ const pool = mysql.createPool({
 // Verificar conexión al iniciar
 pool.getConnection()
   .then(conn => {
-    console.log('MySQL conectado');
+    console.log('✅ MySQL conectado');
     conn.release(); // devolver al pool
   })
   .catch(err => {
-    console.error('Error MySQL:', err.message);
+    console.error('❌ Error MySQL:', err.message);
     process.exit(1); // detener app si no hay DB
   });
 
-module.exports = pool;
+  module.exports = pool;
