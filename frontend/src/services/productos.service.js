@@ -1,22 +1,26 @@
-import api from "../api/axiosConfig";
+import api from '../api/axiosConfig';
 
 export const getProductos = async () => {
-  const res = await api.get("/productos");
-  return res.data; // El backend devuelve el array directamente
+  const res = await api.get('/productos');
+  return res.data;
 };
 
 export const getProductoById = async (id) => {
   const res = await api.get(`/productos/${id}`);
-  return res.data; // El backend devuelve el objeto directamente
-};
-
-export const createProducto = async (producto) => {
-  const res = await api.post("/productos", producto);
   return res.data;
 };
 
-export const updateProducto = async (id, producto) => {
-  const res = await api.put(`/productos/${id}`, producto);
+/**
+ * Campos que espera el backend:
+ * nombre, descripcion, precio_venta, stock_actual, stock_minimo, estado, id_categoria
+ */
+export const createProducto = async (data) => {
+  const res = await api.post('/productos', data);
+  return res.data;
+};
+
+export const updateProducto = async (id, data) => {
+  const res = await api.put(`/productos/${id}`, data);
   return res.data;
 };
 

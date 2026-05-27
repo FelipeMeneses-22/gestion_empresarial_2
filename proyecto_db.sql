@@ -18,7 +18,7 @@ CREATE TABLE usuarios (
   nombre VARCHAR(50) NOT NULL,
   correo VARCHAR(50) NOT NULL UNIQUE,
   contrasena VARCHAR(255) NOT NULL,
-  rol TINYINT NOT NULL
+  rol TINYINT NOT NULL DEFAULT 2
 ) ENGINE=InnoDB;
 
 -- =========================
@@ -48,11 +48,12 @@ CREATE TABLE pedidos (
   id_usuario INT NOT NULL,
   fecha DATE NOT NULL,
   total DECIMAL(10,2) NOT NULL,
-  estado VARCHAR(20) NOT NULL,
+  estado VARCHAR(20) NOT NULL DEFAULT 'pendiente',
 
   FOREIGN KEY (id_usuario)
     REFERENCES usuarios(id_usuario)
     ON DELETE RESTRICT
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- =========================
@@ -69,27 +70,30 @@ CREATE TABLE detalle_pedido (
 
   FOREIGN KEY (id_producto)
     REFERENCES productos(id_producto)
-    ON DELETE RESTRICT,
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
 
   FOREIGN KEY (id_pedido)
     REFERENCES pedidos(id_pedido)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- =========================
--- TABLA: comprobante
+-- TABLA: comprobantes
 -- =========================
 CREATE TABLE comprobantes (
   id_comprobante INT AUTO_INCREMENT PRIMARY KEY,
-  numero_factura INT NOT NULL,
+  numero_factura INT NOT NULL UNIQUE,
   metodo_pago VARCHAR(20) NOT NULL,
-  impuestos DECIMAL(10,2) NOT NULL,
-  fecha_emision DATE NOT NULL,
-  id_pedido INT NOT NULL,
+  impuestos DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  fecha_emision DATE NOT NULL,x
+  id_pedido INT NOT NULL UNIQUE,
 
   FOREIGN KEY (id_pedido)
     REFERENCES pedidos(id_pedido)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- =========================
@@ -106,9 +110,11 @@ CREATE TABLE movimientos_inventario (
 
   FOREIGN KEY (id_producto)
     REFERENCES productos(id_producto)
-    ON DELETE RESTRICT,
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
 
   FOREIGN KEY (id_usuario)
     REFERENCES usuarios(id_usuario)
     ON DELETE RESTRICT
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;

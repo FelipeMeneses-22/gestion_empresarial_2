@@ -1,56 +1,34 @@
-// src/models/categorias.model.js
-const db = require("../config/db");
+const db = require('../config/db');
 
 const Categoria = {
-  //  Obtener todas las categorías
   getAll: async () => {
-    const [rows] = await db.query("SELECT * FROM categorias");
+    const [rows] = await db.query('SELECT * FROM categorias');
     return rows;
   },
 
-  //  Obtener una categoría por ID
   getById: async (id) => {
-    const [rows] = await db.query(
-      "SELECT * FROM categorias WHERE id_categoria = ?",
-      [id],
-    );
+    const [rows] = await db.query('SELECT * FROM categorias WHERE id_categoria = ?', [id]);
     return rows[0];
   },
 
-  //  Crear categoría
-  create: async ({ nombre, descripcion }) => {
+  create: async ({ nombre_categoria, descripcion }) => {
     const [result] = await db.query(
-      `INSERT INTO categorias (nombre_categoria, descripcion)
-       VALUES (?, ?)`,
-      [nombre, descripcion],
+      'INSERT INTO categorias (nombre_categoria, descripcion) VALUES (?, ?)',
+      [nombre_categoria, descripcion || null]
     );
-
-    return {
-      id: result.insertId,
-      nombre,
-      descripcion,
-    };
+    return { id_categoria: result.insertId, nombre_categoria, descripcion };
   },
 
-  // Actualizar categoría
-  update: async (id, { nombre, descripcion }) => {
+  update: async (id, { nombre_categoria, descripcion }) => {
     await db.query(
-      `UPDATE categorias
-       SET nombre_categoria = ?, descripcion = ?
-       WHERE id_categoria = ?`,
-      [nombre, descripcion, id],
+      'UPDATE categorias SET nombre_categoria = ?, descripcion = ? WHERE id_categoria = ?',
+      [nombre_categoria, descripcion || null, id]
     );
-
-    return {
-      id,
-      nombre,
-      descripcion,
-    };
+    return { id_categoria: id, nombre_categoria, descripcion };
   },
 
-  // Eliminar categoría
   delete: async (id) => {
-    await db.query("DELETE FROM categorias WHERE id_categoria = ?", [id]);
+    await db.query('DELETE FROM categorias WHERE id_categoria = ?', [id]);
   },
 };
 
