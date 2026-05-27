@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
+// Configurar CORS para permitir solicitudes desde el frontend
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 // Middleware para leer JSON
 app.use(express.json());
 
